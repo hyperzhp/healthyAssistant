@@ -35,9 +35,8 @@ class HealthTracker {
     // Data persistence methods
     saveData() {
         try {
-            // Note: In production, this would use localStorage
-            // For Claude environment, we keep data in memory
-            console.log('Data saved to memory');
+            localStorage.setItem('healthTrackerData', JSON.stringify(this.data));
+            console.log('Data saved to localStorage');
         } catch (error) {
             console.error('Failed to save data:', error);
             this.showNotification('保存数据失败', 'error');
@@ -46,9 +45,13 @@ class HealthTracker {
 
     loadData() {
         try {
-            // Note: In production, this would load from localStorage
-            // For Claude environment, we start with empty data
-            console.log('Data loaded from memory');
+            const saved = localStorage.getItem('healthTrackerData');
+            if (saved) {
+                this.data = JSON.parse(saved);
+                console.log('Data loaded from localStorage');
+            } else {
+                console.log('No saved data found, using default');
+            }
         } catch (error) {
             console.error('Failed to load data:', error);
             this.showNotification('加载数据失败', 'error');
