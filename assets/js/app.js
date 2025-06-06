@@ -36,7 +36,7 @@ class HealthTracker {
     saveData() {
         try {
             localStorage.setItem('healthTrackerData', JSON.stringify(this.data));
-            console.log('Data saved to localStorage');
+            console.log('Data saved to localStorage:', this.data);
         } catch (error) {
             console.error('Failed to save data:', error);
             this.showNotification('保存数据失败', 'error');
@@ -46,9 +46,10 @@ class HealthTracker {
     loadData() {
         try {
             const saved = localStorage.getItem('healthTrackerData');
+            console.log('Loaded raw data from localStorage:', saved);
             if (saved) {
                 this.data = JSON.parse(saved);
-                console.log('Data loaded from localStorage');
+                console.log('Data loaded from localStorage:', this.data);
             } else {
                 console.log('No saved data found, using default');
             }
@@ -57,7 +58,6 @@ class HealthTracker {
             this.showNotification('加载数据失败', 'error');
         }
     }
-
     // UI Initialization
     setupEventListeners() {
         // Mood slider
