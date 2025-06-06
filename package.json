@@ -1,0 +1,33 @@
+{
+  "name": "personal-health-tracker",
+  "version": "1.0.0",
+  "description": "Privacy-first personal health monitoring application",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'No build step required for this vanilla JS app'",
+    "test": "echo 'Tests would go here'",
+    "lint": "echo 'Linting would go here'"
+  },
+  "keywords": [
+    "health",
+    "tracker",
+    "privacy",
+    "pwa",
+    "javascript",
+    "wellness"
+  ],
+  "author": "Personal Health Tracker Team",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/personal-health-tracker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/personal-health-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/personal-health-tracker/issues"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
