@@ -703,6 +703,20 @@ class HealthTracker {
         this.showNotification('戒色打卡成功！', 'success');
     }
 
+    // 取消打卡
+    noFapCancelCheckIn() {
+        const today = new Date().toISOString().slice(0, 10);
+        const idx = this.data.noFapRecords.indexOf(today);
+        if (idx === -1) {
+            this.showNotification('今天尚未打卡，无需取消', 'warning');
+            return;
+        }
+        this.data.noFapRecords.splice(idx, 1);
+        this.saveData();
+        this.updateNoFapUI();
+        this.showNotification('今日打卡已取消', 'success');
+    }
+
     // 计算连续天数
     getNoFapStreak() {
         const records = this.data.noFapRecords.slice().sort();
@@ -744,9 +758,10 @@ class HealthTracker {
         const streak = this.getNoFapStreak();
         const streakElem = document.getElementById('nofapStreak');
         const btn = document.getElementById('nofapBtn');
+        const cancelBtn = document.getElementById('nofapCancelBtn');
+        const today = new Date().toISOString().slice(0, 10);
         if (streakElem) streakElem.textContent = streak;
         if (btn) {
-            const today = new Date().toISOString().slice(0, 10);
             if (this.data.noFapRecords.includes(today)) {
                 btn.disabled = true;
                 btn.textContent = '今日已打卡';
@@ -754,6 +769,9 @@ class HealthTracker {
                 btn.disabled = false;
                 btn.textContent = '今日打卡';
             }
+        }
+        if (cancelBtn) {
+            cancelBtn.disabled = !this.data.noFapRecords.includes(today);
         }
     }
 }
@@ -794,6 +812,10 @@ function changeTheme() {
 // 全局函数
 function noFapCheckIn() {
     app.noFapCheckIn();
+}
+
+function noFapCancelCheckIn() {
+    app.noFapCancelCheckIn();
 }
 
 // Initialize application
