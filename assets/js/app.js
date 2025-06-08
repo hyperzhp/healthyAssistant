@@ -50,7 +50,13 @@ class HealthTracker {
             const saved = localStorage.getItem('healthTrackerData');
             console.log('Loaded raw data from localStorage:', saved);
             if (saved) {
-                this.data = JSON.parse(saved);
+                const loaded = JSON.parse(saved);
+                // 合并默认字段，防止缺失
+                this.data = Object.assign({}, this.data, loaded);
+                // 保证 noFapRecords 一定是数组
+                if (!Array.isArray(this.data.noFapRecords)) {
+                    this.data.noFapRecords = [];
+                }
                 console.log('Data loaded from localStorage:', this.data);
             } else {
                 console.log('No saved data found, using default');
