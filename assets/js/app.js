@@ -11,7 +11,9 @@
 class HealthTracker {
     constructor() {
         this.data = {
+
             records: [],
+            noFapRecords: [], // 新增
             settings: {
                 reminderTime: '20:00',
                 frequencyReminder: 'none',
@@ -687,6 +689,73 @@ class HealthTracker {
             }, 300);
         }, 3000);
     }
+
+    // 戒色打卡
+    noFapCheckIn() {
+        const today = new Date().toISOString().slice(0, 10);
+        if (this.data.noFapRecords.includes(today)) {
+            this.showNotification('今天已打卡！', 'warning');
+            return;
+        }
+        this.data.noFapRecords.push(today);
+        this.saveData();
+        this.updateNoFapUI();
+        this.showNotification('戒色打卡成功！', 'success');
+    }
+
+    // 计算连续天数
+    getNoFapStreak() {
+        const records = this.data.noFapRecords.slice().sort();
+        if (records.length === 0) return 0;
+        let streak = 0;
+        let prev = new Date();
+        prev.setDate(prev.getDate() + 1); // 明天
+        for (let i = records.length - 1; i >= 0; i--) {
+            const d = new Date(records[i]);
+            prev.setDate(prev.getDate() - 1);
+            if (
+                d.getFullYear() === prev.getFullYear() &&
+                d.getMonth() === prev.getMonth() &&
+                d.getDate() === prev.getDate()
+            ) {
+                streak++;
+            } else if (i === records.length - 1 && this.isToday(records[i])) {
+                streak = 1;
+                prev = d;
+            } else {
+                break;
+            }
+        }
+        return streak;
+    }
+
+    isToday(dateStr) {
+        const today = new Date();
+        const d = new Date(dateStr);
+        return (
+            d.getFullYear() === today.getFullYear() &&
+            d.getMonth() === today.getMonth() &&
+            d.getDate() === today.getDate()
+        );
+    }
+
+    // 更新UI
+    updateNoFapUI() {
+        const streak = this.getNoFapStreak();
+        const streakElem = document.getElementById('nofapStreak');
+        const btn = document.getElementById('nofapBtn');
+        if (streakElem) streakElem.textContent = streak;
+        if (btn) {
+            const today = new Date().toISOString().slice(0, 10);
+            if (this.data.noFapRecords.includes(today)) {
+                btn.disabled = true;
+                btn.textContent = '今日已打卡';
+            } else {
+                btn.disabled = false;
+                btn.textContent = '今日打卡';
+            }
+        }
+    }
 }
 
 // Global functions for HTML onclick handlers
@@ -722,12 +791,21 @@ function changeTheme() {
     app.changeTheme();
 }
 
+// 全局函数
+function noFapCheckIn() {
+    app.noFapCheckIn();
+}
+
 // Initialize application
 let app;
 
 document.addEventListener('DOMContentLoaded', function () {
     app = new HealthTracker();
     console.log('Personal Health Tracker initialized');
+
+    if (app && typeof app.updateNoFapUI === 'function') {
+        app.updateNoFapUI();
+    }
 });
 
 // Error handling

@@ -499,6 +499,16 @@ body {
     box-shadow: var(--shadow-light);
 }
 
+#nofapCard {
+    background: var(--success-gradient);
+    color: #2d3436;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+}
+
 /* Privacy and about info */
 .privacy-note,
 .about-info {
