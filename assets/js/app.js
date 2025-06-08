@@ -758,10 +758,9 @@ class HealthTracker {
         const streak = this.getNoFapStreak();
         const streakElem = document.getElementById('nofapStreak');
         const btn = document.getElementById('nofapBtn');
-        const cancelBtn = document.getElementById('nofapCancelBtn');
-        const today = new Date().toISOString().slice(0, 10);
         if (streakElem) streakElem.textContent = streak;
         if (btn) {
+            const today = new Date().toISOString().slice(0, 10);
             if (this.data.noFapRecords.includes(today)) {
                 btn.disabled = true;
                 btn.textContent = '今日已打卡';
@@ -770,9 +769,59 @@ class HealthTracker {
                 btn.textContent = '今日打卡';
             }
         }
-        if (cancelBtn) {
-            cancelBtn.disabled = !this.data.noFapRecords.includes(today);
+        // 渲染日历
+        this.renderNoFapCalendar();
+    }
+
+    renderNoFapCalendar() {
+        const calendarElem = document.getElementById('nofapCalendar');
+        if (!calendarElem) return;
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth(); // 0-based
+
+        // 获取本月第一天和天数
+        const firstDay = new Date(year, month, 1).getDay(); // 0=周日
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // 生成本月所有日期字符串
+        const daysArr = [];
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            daysArr.push(dateStr);
         }
+
+        // 渲染表头
+        let html = '<table class="calendar-table"><thead><tr>';
+        ['日', '一', '二', '三', '四', '五', '六'].forEach(w => html += `<th>${w}</th>`);
+        html += '</tr></thead><tbody><tr>';
+
+        // 填充空白
+        for (let i = 0; i < firstDay; i++) html += '<td></td>';
+
+        // 渲染每一天
+        daysArr.forEach((dateStr, idx) => {
+            const day = parseInt(dateStr.slice(-2));
+            const checked = this.data.noFapRecords.includes(dateStr);
+            html += `<td style="padding:4px;">
+                <div style="
+                    width:32px;height:32px;line-height:32px;
+                    border-radius:50%;margin:auto;
+                    background:${checked ? '#4facfe' : '#eee'};
+                    color:${checked ? 'white' : '#888'};
+                    font-weight:bold;
+                    border:1px solid ${checked ? '#4facfe' : '#ccc'};
+                    ">
+                    ${day}
+                </div>
+            </td>`;
+            // 换行
+            if ((idx + firstDay + 1) % 7 === 0) html += '</tr><tr>';
+        });
+
+        html += '</tr></tbody></table>';
+        calendarElem.innerHTML = html;
     }
 }
 

@@ -566,6 +566,19 @@ body {
     }
 }
 
+/* 日历表格样式 */
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.calendar-table th,
+.calendar-table td {
+    text-align: center;
+    padding: 2px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     body {
